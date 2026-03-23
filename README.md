@@ -1,11 +1,15 @@
 # WeClawBot-API
 
-一个基于 Go 实现的 `微信ClawBot` (iLink) 机器人 API 服务。
+基于 `微信ClawBot` (iLink) 实现的个人微信消息推送 API 服务。
 
-**它体积极小(≈10MB)，内存占用极低(≈10MB)，极易部署(Docker/二进制)**，可以独立运行，直接提供 HTTP API 给其他程序调用。
+**它体积极小(≈10MB)，内存占用极低(≈10MB)，极易部署(Docker/二进制)，极易调用(HTTP API)。**
+
+无额外依赖，独立运行，方便供其他程序请求，发送微信通知。
+
+![WeClawBot-API](img/main.png)
 
 > [!TIP]
-> 没错！个人微信推送通知它来了！~~再也不用~~折腾企业微信/第三方服务号了！
+> 没错！个人微信消息推送它来了！~~再也不用~~折腾企业微信/第三方服务号了！
 >
 > **当前灰度中，可用性待观察*
 
@@ -49,15 +53,13 @@ docker run -d \
 
 ### 初次扫码登录
 
-容器启动后，进入容器终端(sh)，输入 `weclawbot-api` 扫码登录，授权后的信息将保存在挂载的 `config` 目录下。
+容器启动后，进入容器终端(sh)，输入 `bot` 扫码登录，授权后的信息将保存在挂载的 `config` 目录下。
 
 NAS 部署可通过 WebUI 进入容器终端，也可以在宿主机上通过以下命令进入：
 
 ```bash
-# 进入容器终端
-docker exec -it weclawbot-api sh
-# 运行 weclawbot-api
-weclawbot-api
+# 宿主机进入容器终端
+docker exec -it weclawbot-api bot
 ```
 
 > [!TIP]
@@ -108,7 +110,17 @@ API 支持 `GET` 和 `POST` 请求，兼容以下多种提交方式：
 
 **示例:**
 ```bash
+# GET
 curl http://192.168.8.8:26322/bots/{xxx@im.bot}/messages?token={api_token}&text=Hello
+```
+```bash
+# POST
+curl -X POST http://192.168.8.8:26322/bots/{xxx@im.bot}/messages \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {api_token}" \
+  -d '{
+    "text": "Hello, this is a POST request!"
+  }'
 ```
 
 ### 发送输入状态
@@ -120,7 +132,17 @@ curl http://192.168.8.8:26322/bots/{xxx@im.bot}/messages?token={api_token}&text=
 
 **示例:**
 ```bash
+# GET
 curl http://192.168.8.8:26322/bots/{xxx@im.bot}/typing?token={api_token}&status=1
+```
+```bash
+# POST
+curl -X POST http://192.168.8.8:26322/bots/{xxx@im.bot}/typing \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {api_token}" \
+  -d '{
+    "status": 1
+  }'
 ```
 
 ### 响应格式

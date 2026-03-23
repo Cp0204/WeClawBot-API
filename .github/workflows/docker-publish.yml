@@ -11,6 +11,11 @@ on:
       - main
     tags:
       - "v*"
+    paths:
+      - '**.mod'
+      - '**.sum'
+      - '**.go'
+      - 'Dockerfile'
 
 env:
   IMAGE_NAME: ${{ github.repository }}
